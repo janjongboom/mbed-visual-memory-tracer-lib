@@ -139,8 +139,9 @@ void mbed_vismem_preinit()
  */
 void mbed_vismem_init()
 {
-    // set the callback to the preinit function
-    mbed_mem_trace_set_callback(mbed_vismem_trace_postinit_callback);
+    mbed_stats_heap_t heap_stats;
+    mbed_stats_heap_get(&heap_stats);
+    printf("#visual-memory-tracer-init:%lu:%lu\r\n", heap_stats.current_size, heap_stats.reserved_size);
 
     if (vismem_preinit_orig_buffer) {
         printf(vismem_preinit_orig_buffer);
@@ -150,9 +151,8 @@ void mbed_vismem_init()
         printf("#vismem buffer was not allocated\r\n");
     }
 
-    mbed_stats_heap_t heap_stats;
-    mbed_stats_heap_get(&heap_stats);
-    printf("#visual-memory-tracer-init:%lu:%lu\r\n", heap_stats.current_size, heap_stats.reserved_size);
+    // set the callback to the preinit function
+    mbed_mem_trace_set_callback(mbed_vismem_trace_postinit_callback);
 }
 
 #endif // __VIS_MEM_TRACE_H__
